@@ -117,22 +117,15 @@ Sentetik zaman serisi üzerinde yapılan analiz, qubitlerin zaman içindeki T1 d
 
 ### Qubit Bazlı Bulgular
 
-QUBİT	   T1 DEĞİŞİMİ	  TREND SLOPE  R^2	    STATUS
-QUBİT 0	  -0.80%       	NEGATİF   	 0.376	  WATCH
-QUBİT 1	 -2.58%	        NEGATİF   	 0.574  	DEGRADING
-QUBİT 2	 -3.26%	        NEGATİF	     0.882	  DEGRADING
-QUBİT 3   +0.10%       	POZİTİF    	 0.170	  STABLE
-QUBİT 4	 -1.09%	        NEGATİF	     0.533  	DEGRADING
+- **Qubit 0:** T1 değeri yaklaşık %0.80 azalmıştır. Trend slope negatiftir ancak R² değeri 0.376'dır. Bu nedenle değişim yönü aşağı olsa da doğrusal trend çok güçlü değildir. Qubit 0 WATCH olarak sınıflandırılmıştır.
 
-**Qubit 0:** T1 değeri yaklaşık %0.80 azalmıştır. Trend slope negatif olsa da R² değeri 0.376'dır. Bu nedenle değişim yönü aşağı olsa da doğrusal trend çok güçlü değildir. Qubit 0 WATCH olarak sınıflandırılmıştır.
+- **Qubit 1:** T1 değeri yaklaşık %2.58 azalmıştır. Trend slope negatiftir ve R² değeri 0.574'tür. Bu sonuçlar zaman içinde aşağı yönlü bir değişime işaret etmektedir. Qubit 1 DEGRADING olarak sınıflandırılmıştır.
 
-**Qubit 1:** T1 değeri yaklaşık %2.58 azalmıştır. Negatif trend slope ve 0.574 R² değeri, zaman içinde aşağı yönlü bir değişim olduğunu göstermektedir. Qubit 1 DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 2:** En belirgin negatif değişim Qubit 2'de görülmektedir. T1 değeri yaklaşık %3.26 azalmıştır. Trend slope negatiftir ve R² değeri 0.882'dir. Bu nedenle Qubit 2, sentetik veri setindeki en belirgin negatif T1 trendine sahip qubit olarak değerlendirilmiştir ve DEGRADING olarak sınıflandırılmıştır.
 
-**Qubit 2:** En belirgin negatif değişim Qubit 2'de görülmektedir. T1 değeri yaklaşık %3.26 azalmış ve trend slope negatif çıkmıştır. R² değerinin 0.882 olması, oluşturulan sentetik veride doğrusal negatif trendin diğer qubitlere göre daha belirgin olduğunu göstermektedir. Bu nedenle Qubit 2 DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 3:** T1 değeri yaklaşık %0.10 artmıştır. Trend slope pozitiftir ancak R² değeri 0.170'tir. Güçlü bir doğrusal trend görülmediği için Qubit 3 STABLE olarak sınıflandırılmıştır.
 
-**Qubit 3:** T1 değeri yaklaşık %0.10 artmıştır. Trend slope pozitiftir ancak R² değeri 0.170 olduğu için güçlü bir doğrusal trend bulunduğu söylenemez. Projede kullanılan eşiklere göre Qubit 3 STABLE olarak sınıflandırılmıştır.
-
-**Qubit 4:** T1 değeri yaklaşık %1.09 azalmıştır. Negatif trend slope ve 0.533 R² değeri, aşağı yönlü bir değişim olduğunu göstermektedir. Qubit 4 DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 4:** T1 değeri yaklaşık %1.09 azalmıştır. Trend slope negatiftir ve R² değeri 0.533'tür. Bu nedenle Qubit 4 DEGRADING olarak sınıflandırılmıştır.
 
 ### Genel Değerlendirme
 
