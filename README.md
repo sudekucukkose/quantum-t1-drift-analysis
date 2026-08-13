@@ -1,164 +1,145 @@
-Quantum T1 Drift Analysis
+# Quantum T1 Drift Analysis
 
-Kuantum bilgisayar donanımlarındaki performans değişimlerini zamana bağlı olarak incelemek amacıyla geliştirilmiş, istatistiksel zaman serisi analizi tabanlı bir projedir.
+Kuantum bilgisayar donanımlarında qubit performansının zaman içinde nasıl değişebileceğini incelemek amacıyla geliştirilmiş bir istatistiksel analiz projesidir.
 
-Proje Hakkında
+Bu projede özellikle **T1 relaxation time** metriğine odaklanılmıştır.
 
-Kuantum donanımlarında qubit performansı zaman içerisinde değişebilir. Kalibrasyon değişimleri, çevresel etkiler ve farklı kaynaklardan oluşan değişkenlikler, donanım metriklerinde zamanla dalgalanmalara veya performans drift’ine neden olabilir.
+## Proje Hakkında
 
-Bu projede, qubitlerin T1 gevşeme süresinin zaman içerisindeki davranışı incelenmektedir.
+Kuantum donanımlarında qubit özellikleri zaman içinde değişebilir. Kalibrasyonlar, çevresel koşullar ve farklı kaynaklardan gelen değişkenlikler bu değerlerde dalgalanmalara neden olabilir.
 
-Başlangıç noktası olarak Qiskit’in FakeBrisbane backend’i kullanılmakta, ardından bu backend’den elde edilen T1 değerleri temel alınarak sentetik bir zaman serisi oluşturulmaktadır.
+Bu çalışmada Qiskit'in `FakeBrisbane` backend'i başlangıç noktası olarak kullanılmıştır. Backend'den alınan T1 değerleri kullanılarak 20 zaman adımından oluşan sentetik bir zaman serisi oluşturulmuştur.
 
-Önemli: Bu projede kullanılan zaman serisi verileri sentetiktir. Gerçek bir IBM Quantum işlemcisinden gerçek zamanlı olarak toplanmış ölçümleri temsil etmez.
+Sentetik veriye küçük rastgele değişimler eklenmiş ve qubitlere farklı drift oranları verilerek farklı davranış örnekleri oluşturulmuştur.
 
-⸻
+> **Not:** Bu projede kullanılan zaman serisi sentetiktir. Gerçek bir IBM Quantum işlemcisinden sürekli olarak toplanmış ölçümleri temsil etmez.
 
-Araştırma Sorusu
+## Araştırma Sorusu
 
-İstatistiksel zaman serisi yöntemleri kullanılarak kuantum donanımlarındaki zamansal performans drift’i nasıl tespit edilebilir?
+Basit istatistiksel ve zaman serisi yöntemleri kullanılarak qubitlerin T1 performansındaki zamansal değişimler nasıl izlenebilir?
 
-Proje özellikle şu sorulara odaklanmaktadır:
+Çalışmada özellikle şu sorular ele alınmaktadır:
 
-* T1 değeri simüle edilen zaman içerisinde nasıl değişmektedir?
-* Qubitler arasında farklı temporal davranışlar gözlemlenebilir mi?
-* Başlangıç ve bitiş değerleri arasındaki değişim ne kadardır?
-* Hangi qubitlerde negatif bir trend görülmektedir?
-* Basit istatistiksel göstergeler kullanılarak olası performans düşüşleri işaretlenebilir mi?
+- T1 değeri zaman içinde nasıl değişiyor?
+- Qubitler benzer bir davranış mı gösteriyor?
+- Başlangıç ve bitiş değerleri arasındaki değişim ne kadar?
+- Hangi qubitlerde negatif bir trend görülüyor?
+- Basit istatistiksel göstergeler olası drift davranışlarını işaret edebilir mi?
 
-⸻
+## Yöntem
 
-Kullanılan Yöntem
+Analiz genel olarak şu şekilde ilerlemektedir:
 
-Analiz aşağıdaki süreç üzerinden gerçekleştirilmektedir:
+FakeBrisbane
+↓
+Başlangıç T1 değerleri
+↓
+Sentetik zaman serisi
+↓
+Qubit bazlı analiz
+↓
+Trend analizi
+↓
+Drift sınıflandırması
+↓
+Grafikler ve rapor
 
-FakeBrisbane Backend
-        ↓
-Başlangıç T1 Değerleri
-        ↓
-Sentetik Zaman Serisi Oluşturma
-        ↓
-Qubit Bazlı T1 Verileri
-        ↓
-İstatistiksel Trend Analizi
-        ↓
-Drift Sınıflandırması
-        ↓
-Görselleştirme ve Raporlama
+### 1. FakeBrisbane
 
-1. FakeBrisbane Backend
+Qiskit'in fake backend altyapısındaki `FakeBrisbane` kullanılmıştır.
 
-Projede Qiskit’in fake provider altyapısında bulunan FakeBrisbane backend’i kullanılmaktadır.
+İlk olarak seçilen qubitlerin mevcut T1 değerleri alınmış ve sentetik veri üretiminde başlangıç değeri olarak kullanılmıştır.
 
-Seçilen qubitlerin T1 değerleri, sentetik zaman serisinin başlangıç değerleri olarak kullanılmaktadır.
+### 2. Sentetik Veri
 
-2. Sentetik Zaman Serisi
+Her qubit için 20 zaman adımı oluşturulmuştur.
 
-Başlangıç T1 değerleri 20 adet simüle edilmiş zaman adımına yayılmaktadır.
+Veriye küçük rastgele değişimler eklenerek ölçüm benzeri dalgalanmalar simüle edilmiştir. Ayrıca qubitlere farklı drift oranları verilmiştir.
 
-Ölçüm benzeri küçük dalgalanmalar oluşturmak amacıyla kontrollü rastgele gürültü eklenmektedir.
+Bu sayede:
 
-Ayrıca farklı qubitlere farklı drift oranları verilerek çeşitli davranış senaryoları oluşturulmaktadır:
+- kararlı davranış,
+- hafif negatif drift,
+- daha belirgin negatif drift,
+- hafif pozitif değişim
 
-* Kararlı davranış
-* Hafif performans düşüşü
-* Daha belirgin performans düşüşü
-* Hafif iyileşme
+gibi farklı senaryolar oluşturulmuştur.
 
-Bu değerler sentetik olarak oluşturulmuştur ve gerçek IBM Quantum ölçümleri olarak yorumlanmamalıdır.
+Bu değerler deneysel olarak oluşturulmuştur ve gerçek donanım ölçümleri değildir.
 
-3. İstatistiksel Trend Analizi
+### 3. Trend Analizi
 
-Her qubit için aşağıdaki değerler hesaplanmaktadır:
+Her qubit için aşağıdaki değerler hesaplanmıştır:
 
-* Ortalama T1
-* Başlangıç T1
-* Bitiş T1
-* Yüzde değişim
-* Linear regression trend slope
-* R²
-* Trend sınıflandırması
+- Mean T1
+- Start T1
+- End T1
+- Percentage change
+- Trend slope
+- R²
+- Status
 
-Linear regression kullanılarak T1 değerinin zaman içerisindeki genel yönü tahmin edilmektedir.
+T1 değerlerinin zaman içindeki yönünü görmek için basit bir linear regression modeli kullanılmıştır.
 
-Trend slope, T1’in zaman içerisinde artma veya azalma eğilimini ölçmek için kullanılmaktadır.
+**Trend slope**, T1 değerinin artma veya azalma yönünü gösterir.
 
-R², oluşturulan doğrusal trend modelinin veriyi ne ölçüde açıkladığını göstermektedir.
+**R²**, doğrusal modelin gözlenen veriyi ne ölçüde açıkladığını gösteren bir uyum ölçüsüdür.
 
-4. Drift Sınıflandırması
+### 4. Drift Sınıflandırması
 
-Her qubit, gözlemlenen yüzde değişime göre üç kategoriden birine ayrılmaktadır:
+Qubitler başlangıç-bitiş arasındaki yüzde değişime göre üç gruba ayrılmıştır:
 
-Durum	Yorum
-STABLE	Görece kararlı zamansal davranış
-WATCH	Hafif negatif temporal drift
-DEGRADING	Daha belirgin negatif temporal drift
+| Status | Açıklama |
+|---|---|
+| STABLE | Görece kararlı davranış |
+| WATCH | Hafif negatif değişim |
+| DEGRADING | Daha belirgin negatif değişim |
 
-Bu eşikler proje kapsamında tanımlanmış deneysel eşiklerdir ve IBM tarafından belirlenmiş resmi donanım limitleri değildir.
+Bu eşikler yalnızca bu proje için tanımlanmıştır. IBM tarafından belirlenmiş resmi donanım limitleri değildir.
 
-⸻
+## Görselleştirmeler
 
-Görselleştirmeler
+### Average T1 Temporal Trend
 
-Proje üç temel görselleştirme üretmektedir.
+Seçilen qubitlerin ortalama T1 değerinin zaman içindeki değişimini gösterir.
 
-Ortalama T1 Zaman Trendi
+### Qubit-Level T1 Trends
 
-Seçilen qubitlerin ortalama T1 değerinin simüle edilen zaman içerisindeki değişimini gösterir.
+Her qubitin T1 davranışını ayrı ayrı gösterir. Böylece tek bir ortalama değerin arkasında kalan qubit bazlı farklılıklar görülebilir.
 
-Qubit Bazlı T1 Trendleri
+### T1 Heatmap
 
-Her qubitin T1 davranışını ayrı ayrı gösterir.
+Qubitleri ve zaman adımlarını aynı grafik üzerinde göstererek genel değişimi görmeyi kolaylaştırır.
 
-Bu sayede yalnızca backend’in genel ortalamasına bakmak yerine, hangi qubitlerin farklı davranış gösterdiği incelenebilir.
+## Çıktılar
 
-T1 Heatmap
-
-Qubit ve zaman adımlarını birlikte göstererek T1 davranışının genel bir görünümünü sağlar.
-
-Bu görselleştirme, zaman içerisinde hangi qubitlerde değişim olduğunu hızlı bir şekilde gözlemlemeye yardımcı olur.
-
-⸻
-
-Üretilen Çıktılar
-
-Program çalıştırıldığında outputs/ klasörü altında aşağıdaki dosyalar oluşturulur:
+Program çalıştırıldığında `outputs/` klasörü altında şu dosyalar oluşturulur:
 
 outputs/
-│
 ├── synthetic_t1_timeseries.csv
 ├── qubit_trend_report.csv
 ├── overall_t1_trend.png
 ├── qubit_t1_trends.png
 └── t1_heatmap.png
 
-synthetic_t1_timeseries.csv
+`synthetic_t1_timeseries.csv` oluşturulan zaman serisini içerir.
 
-Qubitlerin zaman adımlarına göre oluşturulan sentetik T1 gözlemlerini içerir.
+`qubit_trend_report.csv` ise her qubit için hesaplanan trend istatistiklerini içerir.
 
-qubit_trend_report.csv
+## Kullanılan Teknolojiler
 
-Her qubit için hesaplanan istatistiksel trend sonuçlarını içerir.
+- Python
+- Qiskit
+- Qiskit IBM Runtime
+- NumPy
+- Pandas
+- Matplotlib
+- Linear Regression
+- Time-Series Analysis
 
-⸻
+## Kurulum
 
-Kullanılan Teknolojiler
-
-* Python
-* Qiskit
-* Qiskit IBM Runtime
-* NumPy
-* Pandas
-* Matplotlib
-* Time-Series Analysis
-* Linear Regression
-* Statistical Trend Analysis
-
-⸻
-
-Kurulum
-
-Gerekli Python paketlerini yüklemek için:
+Gerekli paketleri yüklemek için:
 
 pip install -r requirements.txt
 
@@ -166,70 +147,49 @@ Programı çalıştırmak için:
 
 python main.py
 
-⸻
+## Tekrarlanabilirlik
 
-Tekrarlanabilirlik
-
-Sentetik veri üretiminde sabit bir random seed kullanılmaktadır:
+Sentetik veri üretiminde sabit bir random seed kullanılmıştır:
 
 RANDOM_SEED = 42
 
-Bu sayede proje tekrar çalıştırıldığında aynı sentetik veri setinin yeniden oluşturulması sağlanmaktadır.
+Bu sayede aynı kod ve ortam kullanıldığında aynı sentetik veri setinin yeniden oluşturulması hedeflenmiştir.
 
-⸻
+## Sınırlamalar
 
-Sınırlamalar
+Bu çalışma gerçek zamanlı quantum hardware monitoring sistemi değildir.
 
-Bu proje bir simülasyon tabanlı analitik prototiptir.
+Kullanılan zaman serisi sentetiktir ve `FakeBrisbane` değerleri yalnızca başlangıç noktası olarak kullanılmıştır. Bu nedenle elde edilen trendler gerçek bir IBM Quantum cihazında fiziksel bir bozulmanın kanıtı olarak yorumlanmamalıdır.
 
-En önemli sınırlama, kullanılan zaman serisinin gerçek bir quantum processor üzerinden sürekli olarak toplanmış ölçümlerden oluşmamasıdır.
+Ayrıca çalışma yalnızca T1 metriğine ve 20 simüle edilmiş zaman adımına odaklanmaktadır.
 
-FakeBrisbane, gerçek bir IBM Quantum cihazından sürekli tarihsel ölçüm akışı sağlamamaktadır. Bu projede backend’in mevcut özellikleri başlangıç noktası olarak alınmış ve zaman içerisindeki davranış sentetik olarak modellenmiştir.
+Amaç, gerçek donanım verilerine geçmeden önce kullanılabilecek basit bir analiz yaklaşımını göstermektir.
 
-Bu nedenle elde edilen trendler gerçek bir IBM Quantum cihazında fiziksel bir bozulmanın kanıtı olarak değerlendirilmemelidir.
+## Gelecek Çalışmalar
 
-Projenin amacı, gerçek donanım verisine geçmeden önce kuantum donanım performansının istatistiksel olarak izlenebileceği bir analiz yaklaşımı geliştirmektir.
+Projeyi geliştirmek için birkaç farklı yön düşünülebilir:
 
-⸻
+- T2 coherence analizi
+- Readout error analizi
+- Gate error analizi
+- Confidence interval hesaplamaları
+- Statistical significance testing
+- Change-point detection
+- Anomaly detection
+- Gerçek quantum hardware calibration verilerinin kullanılması
 
-Gelecek Çalışmalar
+Daha ileri bir aşamada bu metrikler birleştirilerek **Quantum Hardware Health Score** gibi daha kapsamlı bir monitoring yaklaşımı geliştirilebilir.
 
-Bu projenin ilerleyen aşamalarında aşağıdaki geliştirmeler yapılabilir:
+## Sonuç
 
-* T2 coherence analizi
-* Readout error analizi
-* Gate error analizi
-* Confidence interval hesaplamaları
-* Statistical significance testing
-* Change-point detection
-* Anomaly detection
-* Gerçek IBM Quantum backend verilerinin kullanılması
-* Otomatik quantum hardware health monitoring sistemi
+Bu proje, qubitlerin T1 relaxation time değerlerini sentetik bir zaman serisi üzerinden inceleyen küçük bir prototiptir.
 
-⸻
+Buradaki amaç bir kuantum işlemcisinin fiziksel ömrünü tahmin etmek değildir.
 
-Projenin Kapsamı
+Daha çok, qubit seviyesinde zaman içinde ortaya çıkabilecek değişimleri ve olası drift davranışlarını basit istatistiksel yöntemlerle izleyebilmek için bir başlangıç noktası oluşturmaktır.
 
-Bu proje özellikle T1 temporal drift analysis üzerine odaklanmaktadır.
+## Author
 
-İleride geliştirilebilecek daha kapsamlı bir projede T1, T2, readout error ve gate error gibi birden fazla donanım metriği birlikte değerlendirilerek daha geniş kapsamlı bir Quantum Hardware Health Monitoring sistemi oluşturulabilir.
+**Quantum Computing × Statistics × Data Science**
 
-⸻
-
-Sonuç
-
-Bu proje, kuantum donanımlarında önemli bir fiziksel özellik olan T1 gevşeme süresinin sentetik bir zaman serisine dönüştürülmesini ve istatistiksel yöntemlerle analiz edilmesini göstermektedir.
-
-Amaç doğrudan bir kuantum işlemcisinin fiziksel ömrünü tahmin etmek değildir.
-
-Bunun yerine, qubit seviyesinde zaman içerisinde meydana gelebilecek performans değişimlerini, drift davranışlarını ve olası degradation sinyallerini istatistiksel yöntemlerle incelemek amaçlanmaktadır.
-
-Proje, ileride gerçek quantum hardware calibration verileriyle çalışabilecek daha kapsamlı monitoring sistemleri için temel bir prototip olarak tasarlanmıştır.
-
-⸻
-
-Author
-
-Quantum Computing × Statistics × Data Science
-
-Kuantum hesaplama, istatistik ve veri biliminin kesişimini araştıran bir portföy projesi.
+Kuantum hesaplama, istatistik ve veri biliminin kesişiminde kişisel bir portföy çalışması.
