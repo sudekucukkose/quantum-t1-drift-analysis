@@ -181,7 +181,7 @@ Run the program with:
 
 A fixed random seed is used when generating the synthetic data:
 
-    RANDOM_SEED = 42
+    RANDOM_SEED=42
 
 This is intended to reproduce the same synthetic dataset when the same code and environment are used.
 
