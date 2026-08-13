@@ -111,6 +111,45 @@ Her qubitin T1 davranışını ayrı ayrı gösterir. Böylece tek bir ortalama 
 
 Qubitleri ve zaman adımlarını aynı grafik üzerinde göstererek genel değişimi görmeyi kolaylaştırır.
 
+## Bulgular ve Yorum
+
+Sentetik zaman serisi üzerinde yapılan analiz, qubitlerin zaman içindeki T1 davranışlarının tamamen aynı olmadığını göstermektedir. Bazı qubitlerde negatif değişim görülürken, bazıları daha kararlı bir davranış göstermiştir.
+
+### Qubit Bazlı Bulgular
+
+QUBİT	   T1 DEĞİŞİMİ	  TREND SLOPE  R^2	    STATUS
+QUBİT 0	  -0.80%       	NEGATİF   	 0.376	  WATCH
+QUBİT 1	 -2.58%	        NEGATİF   	 0.574  	DEGRADING
+QUBİT 2	 -3.26%	        NEGATİF	     0.882	  DEGRADING
+QUBİT 3   +0.10%       	POZİTİF    	 0.170	  STABLE
+QUBİT 4	 -1.09%	        NEGATİF	     0.533  	DEGRADING
+
+**Qubit 0:** T1 değeri yaklaşık %0.80 azalmıştır. Trend slope negatif olsa da R² değeri 0.376'dır. Bu nedenle değişim yönü aşağı olsa da doğrusal trend çok güçlü değildir. Qubit 0 WATCH olarak sınıflandırılmıştır.
+
+**Qubit 1:** T1 değeri yaklaşık %2.58 azalmıştır. Negatif trend slope ve 0.574 R² değeri, zaman içinde aşağı yönlü bir değişim olduğunu göstermektedir. Qubit 1 DEGRADING olarak sınıflandırılmıştır.
+
+**Qubit 2:** En belirgin negatif değişim Qubit 2'de görülmektedir. T1 değeri yaklaşık %3.26 azalmış ve trend slope negatif çıkmıştır. R² değerinin 0.882 olması, oluşturulan sentetik veride doğrusal negatif trendin diğer qubitlere göre daha belirgin olduğunu göstermektedir. Bu nedenle Qubit 2 DEGRADING olarak sınıflandırılmıştır.
+
+**Qubit 3:** T1 değeri yaklaşık %0.10 artmıştır. Trend slope pozitiftir ancak R² değeri 0.170 olduğu için güçlü bir doğrusal trend bulunduğu söylenemez. Projede kullanılan eşiklere göre Qubit 3 STABLE olarak sınıflandırılmıştır.
+
+**Qubit 4:** T1 değeri yaklaşık %1.09 azalmıştır. Negatif trend slope ve 0.533 R² değeri, aşağı yönlü bir değişim olduğunu göstermektedir. Qubit 4 DEGRADING olarak sınıflandırılmıştır.
+
+### Genel Değerlendirme
+
+Beş qubitin üçü DEGRADING, biri WATCH ve biri STABLE olarak sınıflandırılmıştır.
+
+Genel ortalama T1 grafiği, T1 değerlerinin zaman boyunca küçük dalgalanmalar gösterdiğini ve serinin son bölümünde daha düşük seviyelere ulaştığını göstermektedir.
+
+Qubit bazlı trend grafiği, qubitlerin farklı başlangıç T1 seviyelerine sahip olduğunu ve zaman içinde farklı yönlerde değişebildiğini göstermektedir. Heatmap de bu seviye farklarını ve zaman içerisindeki değişimleri birlikte görmeyi sağlamaktadır.
+
+Grafiklerdeki değişimler genel olarak küçük görünse de CSV sonuçları değişimlerin yönünü daha net ortaya koymaktadır. Özellikle Qubit 2'nin %3.26'lık değişimi, negatif trend slope değeri ve 0.882 R² değeri, sentetik veri setinde en belirgin negatif trendin bu qubitte olduğunu göstermektedir.
+
+Bu sonuçlar, yalnızca grafiklere bakmak yerine yüzde değişim, trend slope ve R² gibi basit istatistiksel göstergelerin birlikte değerlendirilmesinin zamansal değişimleri incelemek açısından faydalı olabileceğini göstermektedir.
+
+Ancak bu sınıflandırmalar yalnızca proje kapsamında oluşturulan sentetik veri ve eşikler üzerinden yapılmıştır. DEGRADING olarak sınıflandırılan bir qubitin gerçek bir quantum processor üzerinde fiziksel olarak bozulduğu sonucuna varılamaz.
+
+Bu çalışmanın temel amacı, gerçek donanım verilerine geçmeden önce T1 gibi bir donanım metriğinin zaman içerisindeki değişimini takip etmek için kullanılabilecek basit bir analiz yaklaşımını göstermektir.
+
 ## Çıktılar
 
 Program çalıştırıldığında `outputs/` klasörü altında şu dosyalar oluşturulur:
