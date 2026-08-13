@@ -1,75 +1,73 @@
 # Quantum T1 Drift Analysis
 
-Kuantum bilgisayar donanımlarında qubit performansının zaman içinde nasıl değişebileceğini incelemek amacıyla geliştirilmiş bir istatistiksel analiz projesidir.
+A statistical analysis project developed to explore how qubit performance can change over time.
 
-Bu projede özellikle **T1 relaxation time** metriğine odaklanılmıştır.
+The project focuses specifically on the **T1 relaxation time** metric.
 
-## Proje Hakkında
+## Project Overview
 
-Kuantum donanımlarında qubit özellikleri zaman içinde değişebilir. Kalibrasyonlar, çevresel koşullar ve farklı kaynaklardan gelen değişkenlikler bu değerlerde dalgalanmalara neden olabilir.
+Qubit properties can change over time due to calibration updates, environmental conditions, and other sources of variability.
 
-Bu çalışmada Qiskit'in `FakeBrisbane` backend'i başlangıç noktası olarak kullanılmıştır. Backend'den alınan T1 değerleri kullanılarak 20 zaman adımından oluşan sentetik bir zaman serisi oluşturulmuştur.
+In this project, Qiskit's `FakeBrisbane` backend is used as the starting point. The T1 values obtained from the backend are used to create a synthetic time series consisting of 20 time steps.
 
-Sentetik veriye küçük rastgele değişimler eklenmiş ve qubitlere farklı drift oranları verilerek farklı davranış örnekleri oluşturulmuştur.
+Small random variations are added to the synthetic data, and different drift rates are assigned to the qubits to create different example behaviors.
 
-> **Not:** Bu projede kullanılan zaman serisi sentetiktir. Gerçek bir IBM Quantum işlemcisinden sürekli olarak toplanmış ölçümleri temsil etmez.
+ **Note:** The time-series data used in this project is synthetic. It does not represent continuous measurements collected from a real IBM Quantum processor.
 
-## Araştırma Sorusu
+## Research Question
 
-Basit istatistiksel ve zaman serisi yöntemleri kullanılarak qubitlerin T1 performansındaki zamansal değişimler nasıl izlenebilir?
+How can temporal changes in qubit T1 performance be monitored using simple statistical and time-series methods?
 
-Çalışmada özellikle şu sorular ele alınmaktadır:
+The project focuses on the following questions:
 
-- T1 değeri zaman içinde nasıl değişiyor?
-- Qubitler benzer bir davranış mı gösteriyor?
-- Başlangıç ve bitiş değerleri arasındaki değişim ne kadar?
-- Hangi qubitlerde negatif bir trend görülüyor?
-- Basit istatistiksel göstergeler olası drift davranışlarını işaret edebilir mi?
+- How does T1 change over time?
+- Do the qubits show similar behavior?
+- How large is the change between the starting and ending values?
+- Which qubits show a negative trend?
+- Can simple statistical indicators help identify possible drift behavior?
 
-## Yöntem
+## Method
 
-Analiz genel olarak şu şekilde ilerlemektedir:
+The analysis follows this general workflow:
 
-FakeBrisbane
-↓
-Başlangıç T1 değerleri
-↓
-Sentetik zaman serisi
-↓
-Qubit bazlı analiz
-↓
-Trend analizi
-↓
-Drift sınıflandırması
-↓
-Grafikler ve rapor
+FakeBrisbane  
+↓  
+Baseline T1 values  
+↓  
+Synthetic time series  
+↓  
+Qubit-level analysis  
+↓  
+Trend analysis  
+↓  
+Drift classification  
+↓  
+Visualization and reporting
 
 ### 1. FakeBrisbane
 
-Qiskit'in fake backend altyapısındaki `FakeBrisbane` kullanılmıştır.
+The project uses `FakeBrisbane` from Qiskit's fake backend infrastructure.
 
-İlk olarak seçilen qubitlerin mevcut T1 değerleri alınmış ve sentetik veri üretiminde başlangıç değeri olarak kullanılmıştır.
+The existing T1 values of the selected qubits are first obtained and then used as the baseline values for generating the synthetic data.
 
-### 2. Sentetik Veri
+### 2. Synthetic Data
 
-Her qubit için 20 zaman adımı oluşturulmuştur.
+Twenty time steps are generated for each qubit.
 
-Veriye küçük rastgele değişimler eklenerek ölçüm benzeri dalgalanmalar simüle edilmiştir. Ayrıca qubitlere farklı drift oranları verilmiştir.
+Small random variations are added to simulate measurement-like fluctuations. Different drift rates are also assigned to the qubits.
 
-Bu sayede:
+This creates several example scenarios:
 
-- kararlı davranış,
-- hafif negatif drift,
-- daha belirgin negatif drift,
-- hafif pozitif değişim
+- stable behavior
+- mild negative drift
+- stronger negative drift
+- slight positive change
 
-gibi farklı senaryolar oluşturulmuştur.
+These values are generated for demonstration purposes and are not real hardware measurements.
 
-Bu değerler deneysel olarak oluşturulmuştur ve gerçek donanım ölçümleri değildir.
+### 3. Trend Analysis
 
-### 3. Trend Analizi
-
-Her qubit için aşağıdaki değerler hesaplanmıştır:
+The following values are calculated for each qubit:
 
 - Mean T1
 - Start T1
@@ -79,73 +77,73 @@ Her qubit için aşağıdaki değerler hesaplanmıştır:
 - R²
 - Status
 
-T1 değerlerinin zaman içindeki yönünü görmek için basit bir linear regression modeli kullanılmıştır.
+A simple linear regression model is used to examine the overall direction of T1 over time.
 
-**Trend slope**, T1 değerinin artma veya azalma yönünü gösterir.
+**Trend slope** indicates whether the T1 value tends to increase or decrease over time.
 
-**R²**, doğrusal modelin gözlenen veriyi ne ölçüde açıkladığını gösteren bir uyum ölçüsüdür.
+**R²** is used as a measure of how well the linear model explains the observed data.
 
-### 4. Drift Sınıflandırması
+### 4. Drift Classification
 
-Qubitler başlangıç-bitiş arasındaki yüzde değişime göre üç gruba ayrılmıştır:
+The qubits are divided into three groups based on the percentage change between their starting and ending values:
 
-| Status | Açıklama |
+| Status | Description |
 |---|---|
-| STABLE | Görece kararlı davranış |
-| WATCH | Hafif negatif değişim |
-| DEGRADING | Daha belirgin negatif değişim |
+| STABLE | Relatively stable behavior |
+| WATCH | Mild negative change |
+| DEGRADING | More noticeable negative change |
 
-Bu eşikler yalnızca bu proje için tanımlanmıştır. IBM tarafından belirlenmiş resmi donanım limitleri değildir.
+These thresholds are defined specifically for this project. They are not official hardware limits defined by IBM.
 
-## Görselleştirmeler
+## Visualizations
 
 ### Average T1 Temporal Trend
 
-Seçilen qubitlerin ortalama T1 değerinin zaman içindeki değişimini gösterir.
+Shows how the average T1 value of the selected qubits changes over time.
 
 ### Qubit-Level T1 Trends
 
-Her qubitin T1 davranışını ayrı ayrı gösterir. Böylece tek bir ortalama değerin arkasında kalan qubit bazlı farklılıklar görülebilir.
+Shows the T1 behavior of each qubit separately, making differences between individual qubits easier to observe.
 
 ### T1 Heatmap
 
-Qubitleri ve zaman adımlarını aynı grafik üzerinde göstererek genel değişimi görmeyi kolaylaştırır.
+Shows qubits and time steps together, making the overall changes easier to compare.
 
-## Bulgular ve Yorum
+## Findings and Interpretation
 
-Sentetik zaman serisi üzerinde yapılan analiz, qubitlerin zaman içindeki T1 davranışlarının tamamen aynı olmadığını göstermektedir. Bazı qubitlerde negatif değişim görülürken, bazıları daha kararlı bir davranış göstermiştir.
+The analysis of the synthetic time series shows that the qubits do not all behave in exactly the same way over time. Some qubits show negative changes, while others remain relatively stable.
 
-### Qubit Bazlı Bulgular
+### Qubit-Level Findings
 
-- **Qubit 0:** T1 değeri yaklaşık %0.80 azalmıştır. Trend slope negatiftir ancak R² değeri 0.376'dır. Bu nedenle değişim yönü aşağı olsa da doğrusal trend çok güçlü değildir. Qubit 0 WATCH olarak sınıflandırılmıştır.
+- **Qubit 0:** The T1 value decreased by approximately 0.80%. The trend slope is negative, but the R² value is 0.376. This means that although the overall direction is downward, the linear trend is not particularly strong. Qubit 0 was classified as WATCH.
 
-- **Qubit 1:** T1 değeri yaklaşık %2.58 azalmıştır. Trend slope negatiftir ve R² değeri 0.574'tür. Bu sonuçlar zaman içinde aşağı yönlü bir değişime işaret etmektedir. Qubit 1 DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 1:** The T1 value decreased by approximately 2.58%. The trend slope is negative and the R² value is 0.574. These results indicate a downward change over time. Qubit 1 was classified as DEGRADING.
 
-- **Qubit 2:** En belirgin negatif değişim Qubit 2'de görülmektedir. T1 değeri yaklaşık %3.26 azalmıştır. Trend slope negatiftir ve R² değeri 0.882'dir. Bu nedenle Qubit 2, sentetik veri setindeki en belirgin negatif T1 trendine sahip qubit olarak değerlendirilmiştir ve DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 2:** The most noticeable negative change was observed in Qubit 2. Its T1 value decreased by approximately 3.26%. The trend slope is negative and the R² value is 0.882. Therefore, Qubit 2 shows the strongest negative T1 trend in the synthetic dataset and was classified as DEGRADING.
 
-- **Qubit 3:** T1 değeri yaklaşık %0.10 artmıştır. Trend slope pozitiftir ancak R² değeri 0.170'tir. Güçlü bir doğrusal trend görülmediği için Qubit 3 STABLE olarak sınıflandırılmıştır.
+- **Qubit 3:** The T1 value increased by approximately 0.10%. The trend slope is positive, but the R² value is 0.170. Since there is no strong linear trend, Qubit 3 was classified as STABLE.
 
-- **Qubit 4:** T1 değeri yaklaşık %1.09 azalmıştır. Trend slope negatiftir ve R² değeri 0.533'tür. Bu nedenle Qubit 4 DEGRADING olarak sınıflandırılmıştır.
+- **Qubit 4:** The T1 value decreased by approximately 1.09%. The trend slope is negative and the R² value is 0.533. Therefore, Qubit 4 was classified as DEGRADING.
 
-### Genel Değerlendirme
+### Overall Assessment
 
-Beş qubitin üçü DEGRADING, biri WATCH ve biri STABLE olarak sınıflandırılmıştır.
+Three of the five qubits were classified as DEGRADING, one as WATCH, and one as STABLE.
 
-Genel ortalama T1 grafiği, T1 değerlerinin zaman boyunca küçük dalgalanmalar gösterdiğini ve serinin son bölümünde daha düşük seviyelere ulaştığını göstermektedir.
+The overall average T1 plot shows small fluctuations over time, with the series reaching lower levels toward the end of the simulated period.
 
-Qubit bazlı trend grafiği, qubitlerin farklı başlangıç T1 seviyelerine sahip olduğunu ve zaman içinde farklı yönlerde değişebildiğini göstermektedir. Heatmap de bu seviye farklarını ve zaman içerisindeki değişimleri birlikte görmeyi sağlamaktadır.
+The qubit-level trend plot shows that the qubits start at different T1 levels and can change in different directions over time. The heatmap also provides a combined view of these level differences and temporal changes.
 
-Grafiklerdeki değişimler genel olarak küçük görünse de CSV sonuçları değişimlerin yönünü daha net ortaya koymaktadır. Özellikle Qubit 2'nin %3.26'lık değişimi, negatif trend slope değeri ve 0.882 R² değeri, sentetik veri setinde en belirgin negatif trendin bu qubitte olduğunu göstermektedir.
+The changes may appear relatively small in the plots, but the CSV results make the direction of change easier to compare. In particular, the 3.26% change in Qubit 2, together with its negative trend slope and R² value of 0.882, indicates that it has the strongest negative trend in the synthetic dataset.
 
-Bu sonuçlar, yalnızca grafiklere bakmak yerine yüzde değişim, trend slope ve R² gibi basit istatistiksel göstergelerin birlikte değerlendirilmesinin zamansal değişimleri incelemek açısından faydalı olabileceğini göstermektedir.
+These results suggest that combining simple statistical indicators such as percentage change, trend slope, and R² can be useful when examining temporal changes rather than relying only on visual inspection of the plots.
 
-Ancak bu sınıflandırmalar yalnızca proje kapsamında oluşturulan sentetik veri ve eşikler üzerinden yapılmıştır. DEGRADING olarak sınıflandırılan bir qubitin gerçek bir quantum processor üzerinde fiziksel olarak bozulduğu sonucuna varılamaz.
+However, these classifications are based only on the synthetic data and project-specific thresholds. A qubit classified as DEGRADING in this project should not be interpreted as physically degrading on a real quantum processor.
 
-Bu çalışmanın temel amacı, gerçek donanım verilerine geçmeden önce T1 gibi bir donanım metriğinin zaman içerisindeki değişimini takip etmek için kullanılabilecek basit bir analiz yaklaşımını göstermektir.
+The main purpose of this work is to demonstrate a simple approach for tracking changes in a hardware metric such as T1 before moving to real hardware data.
 
-## Çıktılar
+## Outputs
 
-Program çalıştırıldığında `outputs/` klasörü altında şu dosyalar oluşturulur:
+When the program is executed, the following files are created in the `outputs/` directory:
 
 outputs/
 ├── synthetic_t1_timeseries.csv
@@ -154,11 +152,11 @@ outputs/
 ├── qubit_t1_trends.png
 └── t1_heatmap.png
 
-`synthetic_t1_timeseries.csv` oluşturulan zaman serisini içerir.
+`synthetic_t1_timeseries.csv` contains the generated time-series data.
 
-`qubit_trend_report.csv` ise her qubit için hesaplanan trend istatistiklerini içerir.
+`qubit_trend_report.csv` contains the calculated trend statistics for each qubit.
 
-## Kullanılan Teknolojiler
+## Technologies
 
 - Python
 - Qiskit
@@ -169,59 +167,59 @@ outputs/
 - Linear Regression
 - Time-Series Analysis
 
-## Kurulum
+## Installation
 
-Gerekli paketleri yüklemek için:
+Install the required packages with:
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
-Programı çalıştırmak için:
+Run the program with:
 
-python main.py
+    python main.py
 
-## Tekrarlanabilirlik
+## Reproducibility
 
-Sentetik veri üretiminde sabit bir random seed kullanılmıştır:
+A fixed random seed is used when generating the synthetic data:
 
-RANDOM_SEED = 42
+    RANDOM_SEED = 42
 
-Bu sayede aynı kod ve ortam kullanıldığında aynı sentetik veri setinin yeniden oluşturulması hedeflenmiştir.
+This is intended to reproduce the same synthetic dataset when the same code and environment are used.
 
-## Sınırlamalar
+## Limitations
 
-Bu çalışma gerçek zamanlı quantum hardware monitoring sistemi değildir.
+This project is not a real-time quantum hardware monitoring system.
 
-Kullanılan zaman serisi sentetiktir ve `FakeBrisbane` değerleri yalnızca başlangıç noktası olarak kullanılmıştır. Bu nedenle elde edilen trendler gerçek bir IBM Quantum cihazında fiziksel bir bozulmanın kanıtı olarak yorumlanmamalıdır.
+The time series is synthetic, and the `FakeBrisbane` values are used only as baseline values. Therefore, the observed trends should not be interpreted as evidence of physical degradation in a real IBM Quantum processor.
 
-Ayrıca çalışma yalnızca T1 metriğine ve 20 simüle edilmiş zaman adımına odaklanmaktadır.
+The analysis also focuses only on the T1 metric and 20 simulated time steps.
 
-Amaç, gerçek donanım verilerine geçmeden önce kullanılabilecek basit bir analiz yaklaşımını göstermektir.
+The main purpose is to demonstrate a simple analysis approach that could be used before moving to real hardware data.
 
-## Gelecek Çalışmalar
+## Future Work
 
-Projeyi geliştirmek için birkaç farklı yön düşünülebilir:
+There are several possible directions for extending the project:
 
-- T2 coherence analizi
-- Readout error analizi
-- Gate error analizi
-- Confidence interval hesaplamaları
+- T2 coherence analysis
+- Readout error analysis
+- Gate error analysis
+- Confidence interval calculations
 - Statistical significance testing
 - Change-point detection
 - Anomaly detection
-- Gerçek quantum hardware calibration verilerinin kullanılması
+- Analysis of real quantum hardware calibration data
 
-Daha ileri bir aşamada bu metrikler birleştirilerek **Quantum Hardware Health Score** gibi daha kapsamlı bir monitoring yaklaşımı geliştirilebilir.
+At a later stage, these metrics could be combined into a broader **Quantum Hardware Health Score** or monitoring approach.
 
-## Sonuç
+## Conclusion
 
-Bu proje, qubitlerin T1 relaxation time değerlerini sentetik bir zaman serisi üzerinden inceleyen küçük bir prototiptir.
+This project is a small prototype for analyzing qubit T1 relaxation time using a synthetic time series.
 
-Buradaki amaç bir kuantum işlemcisinin fiziksel ömrünü tahmin etmek değildir.
+The goal is not to predict the physical lifetime of a quantum processor.
 
-Daha çok, qubit seviyesinde zaman içinde ortaya çıkabilecek değişimleri ve olası drift davranışlarını basit istatistiksel yöntemlerle izleyebilmek için bir başlangıç noktası oluşturmaktır.
+Instead, the project provides a starting point for monitoring changes and possible drift behavior at the qubit level using simple statistical methods.
 
 ## Author
 
 **Quantum Computing × Statistics × Data Science**
 
-Kuantum hesaplama, istatistik ve veri biliminin kesişiminde kişisel bir portföy çalışması.
+A personal portfolio project exploring the intersection of quantum computing, statistics, and data science.
