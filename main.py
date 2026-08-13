@@ -7,25 +7,16 @@ import matplotlib.pyplot as plt
 from qiskit_ibm_runtime.fake_provider import FakeBrisbane
 
 
-# --------------------------------------------------
-# Project settings
-# --------------------------------------------------
-
 RANDOM_SEED = 42
 NUM_QUBITS = 5
 NUM_TIME_STEPS = 20
-
 OUTPUT_DIR = "outputs"
 
 np.random.seed(RANDOM_SEED)
 
 
-# --------------------------------------------------
-# Load backend
-# --------------------------------------------------
-
 def load_backend():
-    """Load IBM's FakeBrisbane backend."""
+    """Load the FakeBrisbane backend."""
 
     backend = FakeBrisbane()
 
@@ -35,29 +26,19 @@ def load_backend():
     return backend
 
 
-# --------------------------------------------------
-# Generate synthetic time-series data
-# --------------------------------------------------
-
 def generate_data(backend):
-    """
-    Generate synthetic T1 measurements over time.
-
-    FakeBrisbane provides the baseline T1 values.
-    Temporal changes are synthetically simulated.
-    """
+    """Create synthetic T1 measurements for each qubit over time."""
 
     records = []
 
     number_of_qubits = min(NUM_QUBITS, backend.num_qubits)
 
-    # Synthetic drift scenarios for demonstration
     drift_rates = {
-        0: 0.00000000,    # stable
-        1: -0.00000015,   # mild degradation
-        2: -0.00000040,   # stronger degradation
-        3: 0.00000010,    # slight improvement
-        4: -0.00000010    # small degradation
+        0: 0.00000000,
+        1: -0.00000015,
+        2: -0.00000040,
+        3: 0.00000010,
+        4: -0.00000010
     }
 
     for qubit in range(number_of_qubits):
@@ -90,12 +71,8 @@ def generate_data(backend):
     return pd.DataFrame(records)
 
 
-# --------------------------------------------------
-# Statistical trend analysis
-# --------------------------------------------------
-
 def calculate_trends(data):
-    """Calculate trend statistics for each qubit."""
+    """Calculate T1 trend statistics for each qubit."""
 
     results = []
 
@@ -104,40 +81,30 @@ def calculate_trends(data):
         x = group["Time_Step"].to_numpy()
         y = group["T1"].to_numpy()
 
-        # Linear regression
         slope, intercept = np.polyfit(x, y, 1)
 
         predicted = slope * x + intercept
-
         residuals = y - predicted
 
         ss_res = np.sum(residuals ** 2)
-        ss_tot = np.sum(
-            (y - np.mean(y)) ** 2
-        )
+        ss_tot = np.sum((y - np.mean(y)) ** 2)
 
         if ss_tot == 0:
             r_squared = 0
         else:
-            r_squared = 1 - (
-                ss_res / ss_tot
-            )
+            r_squared = 1 - (ss_res / ss_tot)
 
         start_t1 = y[0]
         end_t1 = y[-1]
 
         percentage_change = (
-            (end_t1 - start_t1)
-            / start_t1
+            (end_t1 - start_t1) / start_t1
         ) * 100
 
-        # Simple project-defined classification
         if percentage_change <= -1:
             status = "DEGRADING"
-
         elif percentage_change <= -0.2:
             status = "WATCH"
-
         else:
             status = "STABLE"
 
@@ -155,10 +122,6 @@ def calculate_trends(data):
     return pd.DataFrame(results)
 
 
-# --------------------------------------------------
-# Print report
-# --------------------------------------------------
-
 def print_report(results):
 
     print("\n")
@@ -175,18 +138,13 @@ def print_report(results):
         "Status"
     ]
 
-    print(
-        results[columns].to_string(
-            index=False
-        )
-    )
+    print(results[columns].to_string(index=False))
 
     print("\nInterpretation:")
 
     for _, row in results.iterrows():
 
         if row["Status"] == "DEGRADING":
-
             print(
                 f"- {row['Qubit']}: "
                 f"negative T1 trend detected "
@@ -194,7 +152,6 @@ def print_report(results):
             )
 
         elif row["Status"] == "WATCH":
-
             print(
                 f"- {row['Qubit']}: "
                 f"mild temporal drift detected "
@@ -202,16 +159,11 @@ def print_report(results):
             )
 
         else:
-
             print(
                 f"- {row['Qubit']}: "
                 f"relatively stable T1 behavior."
             )
 
-
-# --------------------------------------------------
-# Plot average trend
-# --------------------------------------------------
 
 def plot_overall_trend(data):
 
@@ -236,10 +188,7 @@ def plot_overall_trend(data):
         label="Overall mean"
     )
 
-    plt.title(
-        "Average T1 Temporal Trend"
-    )
-
+    plt.title("Average T1 Temporal Trend")
     plt.xlabel("Time Step")
     plt.ylabel("Average T1")
 
@@ -263,10 +212,6 @@ def plot_overall_trend(data):
     plt.show()
 
 
-# --------------------------------------------------
-# Plot individual qubit trends
-# --------------------------------------------------
-
 def plot_qubit_trends(data):
 
     plt.figure(figsize=(10, 6))
@@ -280,10 +225,7 @@ def plot_qubit_trends(data):
             label=qubit
         )
 
-    plt.title(
-        "Qubit-Level T1 Performance Over Time"
-    )
-
+    plt.title("Qubit-Level T1 Performance Over Time")
     plt.xlabel("Time Step")
     plt.ylabel("T1")
 
@@ -307,10 +249,6 @@ def plot_qubit_trends(data):
     plt.show()
 
 
-# --------------------------------------------------
-# T1 heatmap
-# --------------------------------------------------
-
 def plot_heatmap(data):
 
     matrix = data.pivot(
@@ -329,10 +267,7 @@ def plot_heatmap(data):
 
     plt.colorbar(label="T1")
 
-    plt.title(
-        "Qubit T1 Performance Heatmap"
-    )
-
+    plt.title("Qubit T1 Performance Heatmap")
     plt.xlabel("Time Step")
     plt.ylabel("Qubit")
 
@@ -359,10 +294,6 @@ def plot_heatmap(data):
     plt.show()
 
 
-# --------------------------------------------------
-# Save results
-# --------------------------------------------------
-
 def save_results(data, results):
 
     data.to_csv(
@@ -382,10 +313,6 @@ def save_results(data, results):
     )
 
 
-# --------------------------------------------------
-# Main program
-# --------------------------------------------------
-
 def main():
 
     os.makedirs(
@@ -393,47 +320,29 @@ def main():
         exist_ok=True
     )
 
-    print(
-        "Quantum T1 Drift Analysis"
-    )
-    print(
-        "-" * 50
-    )
+    print("Quantum T1 Drift Analysis")
+    print("-" * 50)
 
     backend = load_backend()
 
-    print(
-        "\nGenerating synthetic temporal data..."
-    )
+    print("\nGenerating synthetic temporal data...")
 
     data = generate_data(backend)
 
-    print(
-        f"Generated {len(data)} observations."
-    )
+    print(f"Generated {len(data)} observations.")
 
     results = calculate_trends(data)
 
     print_report(results)
 
-    save_results(
-        data,
-        results
-    )
+    save_results(data, results)
 
     plot_overall_trend(data)
-
     plot_qubit_trends(data)
-
     plot_heatmap(data)
 
-    print(
-        "\nAnalysis completed."
-    )
-
-    print(
-        "Results saved in the 'outputs' directory."
-    )
+    print("\nAnalysis completed.")
+    print("Results saved in the 'outputs' directory.")
 
 
 if __name__ == "__main__":
